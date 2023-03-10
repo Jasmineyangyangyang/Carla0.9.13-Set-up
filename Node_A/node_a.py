@@ -18,6 +18,9 @@ import pygame
 import numpy as np
 import time
 import csv
+
+from pygame_config import RenderObject,  pygame_callback
+
 # carla library
 import carla
 
@@ -90,19 +93,6 @@ for vehicle in vehicles:
     vehicle.set_autopilot(True)
     traffic_manager.vehicle_percentage_speed_difference(vehicle, target_speed - vehicle.get_velocity().length())
     traffic_manager.auto_lane_change(vehicle, False)
-
-
-class RenderObject(object):
-    def __init__(self, width, height):
-        init_image = np.random.randint(0,255,(height,width,3),dtype='uint8')
-        self.surface = pygame.surfarray.make_surface(init_image.swapaxes(0,1))
-
-# Camera sensor callback, reshapes raw data from camera into 2D RGB and applies to PyGame surface
-def pygame_callback(data, obj):
-    img = np.reshape(np.copy(data.raw_data), (data.height, data.width, 4))
-    img = img[:,:,:3]
-    img = img[:, :, ::-1]
-    obj.surface = pygame.surfarray.make_surface(img.swapaxes(0,1))
 
 # Initialise the camera floating behind the vehicle
 # camera_init_trans = carla.Transform(carla.Location(x=-5, z=3), carla.Rotation(pitch=-20))  
